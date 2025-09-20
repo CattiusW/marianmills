@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Marian Mills | Art</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg-light: #f5f0e6;
+        --bg-dark: #f5f0e6;
+        --accent: #a48f7a;
+        --text-main: #3a2c23;
+        --text-muted: #8e7c6b;
+      }
+
+      .contact-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        /* space between buttons */
+        flex-wrap: wrap;
+        /* allow wrapping on small screens */
+        margin-top: 20px;
+      }
+
+      .contact-buttons a {
+        display: inline-flex;
+        align-items: center;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+        font-family: 'Quicksand', sans-serif;
+        background: var(--bg-light);
+        color: var(--text-main);
+        height: 100%;
+        overflow-y: scroll;
+        scroll-snap-type: y mandatory;
+      }
+
+      section {
+        width: 100%;
+        height: 100vh;
+        scroll-snap-align: start;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        padding: 40px 20px;
+        position: relative;
+      }
+
+      /* Background image layer */
+      /* Mobile: show one image at a time */
+      @media (max-width: 768px) {
+        #gallery {
+          overflow-x: scroll;
+          /* allow horizontal swipe */
+          scroll-snap-type: x mandatory;
+        }
+
+        #galleryContainer {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 0;
+          /* no space between images */
+          width: 100%;
+        }
+
+        .art-piece {
+          flex: 0 0 100%;
+          /* each image takes full width */
+          scroll-snap-align: center;
+          max-width: 100%;
+          /* prevent shrinking */
+        }
+
+        .art-piece img {
+          width: 100%;
+          height: auto;
+          border-radius: 0;
+          /* optional: remove corners for fullscreen */
+          border: none;
+          box-shadow: none;
+        }
+
+        .caption,
+        .bio {
+          padding: 10px;
+        }
+      }
+
+      #intro {
+        background: url('/art/art1.jpg') center center / cover no-repeat;
+        color: var(--text-main);
+        text-align: center;
+      }
+
+      /* Frosted glass wrapper */
+      #intro .text-box {
+        background: rgba(255, 255, 255, 0.2);
+        /* semi-transparent */
+        backdrop-filter: blur(10px);
+        /* blur the background behind box */
+        -webkit-backdrop-filter: blur(10px);
+        /* for Safari */
+        padding: 40px 30px;
+        /* spacing inside box */
+        border-radius: 16px;
+        /* rounded corners */
+        text-align: center;
+        color: #000000;
+        /* text color */
+        max-width: 800px;
+        /* optional width limit */
+        margin: 0 auto;
+        /* center horizontally */
+      }
+
+      #intro h1 {
+        font-size: 3em;
+        margin-bottom: 20px;
+      }
+
+      #intro p {
+        font-size: 1.1em;
+        max-width: 600px;
+        margin-bottom: 40px;
+        color: var(--accent);
+      }
+
+      .contact-scroll {
+        position: fixed;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.2em;
+        color: var(--text-main);
+        background-color: var(--bg-light);
+        padding: 10px 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
+        font-weight: 500;
+        display: none;
+        /* Hidden by default */
+        align-items: center;
+        gap: 8px;
+        z-index: 1000;
+      }
+
+      .contact-scroll:hover {
+        background-color: var(--accent);
+        color: var(--bg-light);
+      }
+
+      /* Unified style for both scroll buttons */
+      .scroll-down {
+        background: rgb(54, 51, 51);
+        /* semi-transparent */
+        backdrop-filter: blur(10px);
+        /* blur the background behind box */
+        -webkit-backdrop-filter: blur(10px);
+        /* for Safari */
+        opacity: 0.4;
+        /* Dynamic opacity */
+        font-size: 1.2em;
+        color: white;
+        background-color: rgb(75, 72, 72);
+        padding: 10px 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: background 0.3s ease, color 0.3s ease;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 40px;
+        /* 👈 Add this line to lower the button */
+      }
+
+      .scroll-down:hover,
+      .contact-scroll:hover {
+        background-color: var(--accent);
+        color: var(--bg-light);
+      }
+
+      #gallery {
+        background: #eae4dc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* overflow: hidden; */
+        position: relative;
+        padding: 60px 20px;
+      }
+
+      #galleryContainer {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 20px;
+        transition: transform 0.3s ease;
+        max-width: 1200px;
+      }
+
+      .art-piece {
+        flex: 0 0 auto;
+        text-align: center;
+        max-width: 280px;
+      }
+
+      .art-piece img {
+        width: 100%;
+        height: auto;
+        border-radius: 12px;
+        border: 2px solid #d1bfa7;
+        box-shadow: 0 6px 12px rgba(60, 40, 30, 0.2);
+        transition: transform 0.3s ease;
+      }
+
+      .art-piece:hover img {
+        transform: scale(1.03);
+      }
+
+      .caption {
+        margin-top: 10px;
+        font-size: 1em;
+        color: var(--text-main);
+        font-weight: bold;
+      }
+
+      .bio {
+        font-size: 0.9em;
+        color: var(--text-muted);
+        margin-top: 5px;
+      }
+
+      .scroll-button {
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--accent);
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1000;
+        transition: background 0.3s ease;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      .scroll-button:hover {
+        background: #8f7b6a;
+      }
+
+      .scroll-button i {
+        color: white;
+        font-size: 1.5em;
+      }
+
+      #scrollLeft {
+        left: 20px;
+      }
+
+      #scrollRight {
+        right: 20px;
+      }
+
+      #contact {
+        background: var(--bg-light);
+        text-align: center;
+      }
+
+      #contact h2 {
+        font-size: 2em;
+        margin-bottom: 20px;
+        color: var(--text-main);
+      }
+
+      #contact p {
+        font-size: 1em;
+        max-width: 600px;
+        margin: 0 auto 30px;
+        color: var(--text-muted);
+      }
+
+      #contact a {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 1.1em;
+        color: var(--text-main);
+        text-decoration: none;
+        border: 1px solid var(--text-main);
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+
+      #contact a:hover {
+        background: var(--text-main);
+        color: var(--bg-light);
+      }
+
+      #contact a i {
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="intro">
+      <div class="text-box">
+        <h1>Marian Mills</h1>
+        <p style="color:black">Marian Mills is a still life painter. She depicts everyday environments in intimate, bright colours. She creates paintings that express atmosphere and emotion and bring life to objects that are often overlooked. Her abstract art style prioritises feeling over detail giving her art a unique movement. She is inspired by Matisse, Bonnard, and Vermeer. She is available to <strong>
+            <a href="#contact" style="text-decoration: none; color:#000000">commission</a>
+          </strong>
+        </p>
+        <div class="scroll-down" onclick="document.getElementById('gallery').scrollIntoView()">
+          <i class="fas fa-arrow-down"></i> Gallery
+        </div>
+      </div>
+    </section>
+    <!-- Gallery Section -->
+    <!-- Gallery Section -->
+    <section id="gallery">
+      <button class="scroll-button" id="scrollLeft">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div id="galleryContainer"></div>
+      <button class="scroll-button" id="scrollRight">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+      <!-- Move this outside the scrolling container -->
+      <div class="contact-scroll" id="galleryContactBtn" onclick="document.getElementById('contact').scrollIntoView()">
+        <i class="fas fa-arrow-down"></i>Contact Me
+      </div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>Contact Me</h2>
+      <p>If you'd like to collaborate, commission a piece, or just say hello — I'd love to hear from you.</p>
+
+      <div id="contactButtons" class="contact-buttons">      
+        <a href="https://mailhide.io/en/e/O3kZ6uuR">
+          <i class="fas fa-envelope"></i> Email </a>
+        <a href="https://www.artweeks.org/v/marian-mills/">
+          <i class="fa-solid fa-palette"></i> Artweeks </a>
+        <a href="https://instagram.com/marianmills.art">
+          <i class="fa-brands fa-square-instagram"></i> Instagram 
+        </a>
+      </div>
+
+    </section>
+    <script>
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'e') {
+          document.designMode = (document.designMode === "on") ? "off" : "on";
+          alert(`Design mode: ${document.designMode}`);
+        }
+      });
+      const galleryContainer = document.getElementById('galleryContainer');
+      const scrollLeftBtn = document.getElementById('scrollLeft');
+      const scrollRightBtn = document.getElementById('scrollRight');
+      const gallerySection = document.getElementById('gallery');
+      const galleryContactBtn = document.getElementById('galleryContactBtn');
+
+      function createArtPiece(data) {
+        const img = document.createElement('img');
+        img.src = data.image;
+        img.alt = data.title;
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = data.title;
+        const bio = document.createElement('div');
+        bio.className = 'bio';
+        bio.textContent = data.bio;
+        const container = document.createElement('div');
+        container.className = 'art-piece';
+        container.appendChild(img);
+        container.appendChild(caption);
+        container.appendChild(bio);
+        return container;
+      }
+      fetch('gallery.json').then(response => response.json()).then(data => {
+        data.forEach(item => {
+          galleryContainer.appendChild(createArtPiece(item));
+        });
+      }).catch(error => console.error('Error loading gallery:', error));
+      scrollLeftBtn.addEventListener('click', () => {
+        gallerySection.scrollBy({
+          left: -300,
+          behavior: 'smooth'
+        });
+      });
+      scrollRightBtn.addEventListener('click', () => {
+        gallerySection.scrollBy({
+          left: 300,
+          behavior: 'smooth'
+        });
+      });
+      /// Show/hide scroll arrows only in gallery + update URL hash
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            const isVisible = entry.isIntersecting && entry.intersectionRatio >= 0.9;
+            scrollLeftBtn.style.display = isVisible ? 'flex' : 'none';
+            scrollRightBtn.style.display = isVisible ? 'flex' : 'none';
+            // Update URL hash dynamically
+            if (isVisible) {
+              history.replaceState(null, null, '#gallery');
+            }
+          });
+        }, {
+          threshold: [0.9]
+        });
+      observer.observe(gallerySection);
+      // Show/hide "C
+      // ontact Me" button + update hash if desired
+      const galleryOnlyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          galleryContactBtn.style.display = entry.isIntersecting ? 'inline-flex' : 'none';
+          // Optional: if you want the URL hash to update when the contact button appears
+          if (entry.isIntersecting) {
+            history.replaceState(null, null, '#gallery'); // or '#contact' if you want the hash to match the contact button
+          }
+        });
+      }, {
+        threshold: 0.5
+      });
+      galleryOnlyObserver.observe(gallerySection);
+      // Dynamic URL hash for all sections
+      const sections = document.querySelectorAll('section');
+      const hashObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              history.replaceState(null, null, `#${entry.target.id}`);
+            }
+          });
+        }, {
+          threshold: 0.5
+        } // triggers when 50% of section is visible
+      );
+      sections.forEach(section => hashObserver.observe(section));
+      const overlay = document.getElementById('imageOverlay');
+      const overlayImage = document.getElementById('overlayImage');
+      const overlayBio = document.getElementById('overlayBio');
+      const overlayBackground = document.getElementById('overlayBackground');
+      // Modify createArtPiece to add click handler
+      function createArtPiece(data) {
+        const img = document.createElement('img');
+        img.src = data.image;
+        img.alt = data.title;
+        const caption = document.createElement('div');
+        caption.className = 'caption';
+        caption.textContent = data.title;
+        const bio = document.createElement('div');
+        bio.className = 'bio';
+        bio.textContent = data.bio;
+        const container = document.createElement('div');
+        container.className = 'art-piece';
+        container.appendChild(img);
+        container.appendChild(caption);
+        container.appendChild(bio);
+        // Add click to open overlay
+        img.addEventListener('click', () => {
+          overlayImage.src = data.image;
+          overlayImage.alt = data.title;
+          overlayBio.textContent = data.bio;
+          overlay.style.display = 'flex';
+        });
+        return container;
+      }
+      // Close overlay on background click
+      overlayBackground.addEventListener('click', () => {
+        overlay.style.display = 'none';
+      });
+    </script>
+    <script>
+      document.addEventListener('click', function(e) {
+        // Open overlay when clicking an image inside .art-piece
+        if (e.target.tagName === 'IMG' && e.target.closest('.art-piece')) {
+          const overlay = document.getElementById('imageOverlay');
+          const overlayImage = document.getElementById('overlayImage');
+          const overlayBio = document.getElementById('overlayBio');
+          overlayImage.src = e.target.src;
+          const bio = e.target.closest('.art-piece').querySelector('.bio');
+          overlayBio.textContent = bio ? bio.textContent : '';
+          overlay.style.display = 'flex';
+        }
+        // Close overlay when clicking the blurred background
+        if (e.target.id === 'overlayBackground') {
+          document.getElementById('imageOverlay').style.display = 'none';
+        }
+      });
+    </script>
+    <div id="imageOverlay" style="display:none;">
+      <div class="overlay-background" id="overlayBackground"></div>
+      <div class="overlay-content">
+        <img id="overlayImage" src="" alt="">
+        <div class="overlayBio" id="overlayBio"></div>
+      </div>
+    </div>
+    <style>
+      #imageOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9999;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      #overlayBackground {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px);
+        background: rgba(0, 0, 0, 0.6);
+        cursor: pointer;
+      }
+
+      #overlayContent {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        color: white;
+        max-width: 90%;
+      }
+
+      #overlayContent img {
+        max-width: 100%;
+        max-height: 70vh;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      #overlayBio {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #f0f0f0;
+      }
+
+      #imageOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .overlay-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backdrop-filter: blur(10px);
+        background: rgba(0, 0, 0, 0.4);
+        cursor: pointer;
+      }
+
+      .overlay-content {
+        position: relative;
+        z-index: 2001;
+        max-width: 90%;
+        max-height: 90%;
+        text-align: center;
+        color: white;
+      }
+
+      .overlay-content img {
+        max-width: 100%;
+        max-height: 70vh;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      }
+
+      .overlayBio {
+        margin-top: 20px;
+        font-size: 1.2em;
+        color: #f0f0f0;
+      }
+    </style>
+    <!-- Copyright Bar -->
+    <div class="copyright-bar"> © 2025 Marian Mills. All Rights Reserved. Made and Designed by <strong id="copyright-bar-text">
+        <a href="https://github.com/cattiusw" style="color: var(--accent); text-decoration: none;@media screen and (max-width: 600px) { font-size: 0.20em;}">@Cassius</a>
+      </strong>. </div>
+    <style>
+      .copyright-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: --bg-light;
+        /* matches your accent */
+        color: var(--accent);
+        text-align: center;
+        font-size: 0.85em;
+        padding: 6px 10px;
+        z-index: 3000;
+      }
+
+      @media (max-width: 600px) {
+        .scroll-button {
+          display: flex;
+          /* show buttons on mobile */
+        }
+
+        #scrollLeft {
+          left: 10px;
+        }
+
+        #scrollRight {
+          right: 10px;
+        }
+
+        .copyright-bar {
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          background: --bg-light;
+          /* matches your accent */
+          color: var(--accent);
+          text-align: center;
+          font-size: 0.20em;
+          padding: 6px 10px;
+          z-index: 3000;
+        }
+
+        .copyright-bar>a {
+          font-size: 0.20em;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .copyright-bar {
+          font-size: 0.30em;
+          /* same as desktop so @Cassius doesn't look bigger */
+        }
+
+        .copyright-bar a {
+          font-size: inherit;
+          /* ensures link matches text */
+        }
+      }
+    </style>
+    <script>
+      // Disable right-click on images
+      document.addEventListener('contextmenu', function(e) {
+        if (e.target.tagName === 'IMG') {
+          e.preventDefault();
+        }
+      });
+      // Blur while any key is held
+      document.addEventListener('keydown', function() {
+        document.querySelectorAll('img').forEach(img => {
+          img.style.filter = 'blur(8px)'; // blur strength
+        });
+      });
+      // Remove blur when key is released
+      document.addEventListener('keyup', function() {
+        document.querySelectorAll('img').forEach(img => {
+          img.style.filter = 'none';
+        });
+      });
+    </script>
+  </body>
+</html>
+<script>
+  const shareBtn = document.getElementById('shareWebsiteBtn');
+  shareBtn.addEventListener('click', async () => {
+    const shareData = {
+      title: 'Marian Mills Art',
+      text: 'Check out Marian Mills’ artwork!',
+      url: window.location.href
+    };
+    // Check if browser supports Web Share API
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        console.log('Website shared successfully');
+      } catch (err) {
+        console.error('Error sharing:', err);
+      }
+    } else {
+      // Fallback for desktop: copy link to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard! You can now share it manually.');
+      } catch (err) {
+        alert('Unable to copy link. Please copy manually.');
+      }
+    }
+  });
+</script>
